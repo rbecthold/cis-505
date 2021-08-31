@@ -1,0 +1,35 @@
+## OS X
+.DS_Store
+
+## Eclipse IDE
+bin/
+temp/
+.metadata
+*.tmp
+.settings/
+local.properties
+
+## VS Code IDE
+.vscode
+.code-workspace
+
+## IntelliJ IDE
+.idea
+out/
+
+## NetBeans IDE
+build/
+nbbuild/
+dist/
+nbproject/
+
+## General Files
+*.class
+*.jar
+*.war
+*.log
+/target/
+hs_err_pid*
+.project
+.classpath
+.impl
