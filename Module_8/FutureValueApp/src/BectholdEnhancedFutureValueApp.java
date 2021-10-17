@@ -12,6 +12,7 @@
     Watch Cool IT Help. (2020). How to setup JavaFx Environment in Visual Studio code? [Video]. Youtube. https://youtu.be/H67COH9F718
 */
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javafx.application.Application;
@@ -122,6 +123,11 @@ public class BectholdEnhancedFutureValueApp extends Application {
     } // End start
 
 
+    /**
+     * Void method clearFormFields:
+     *      Resets on-screen text and Integer selections
+     *      for use with the 'btnClear' component
+     */
     private void clearFormFields() {
         
             tfMonthlyPayment.setText("");
@@ -133,6 +139,14 @@ public class BectholdEnhancedFutureValueApp extends Application {
     } // End clearFormFields
 
 
+    /**
+     * Void method calculateResults:
+     *      If the required components contain values,
+     *      calls calculateFutureValue from FinanceCalculator.java and displays the returned
+     *      value in TextArea taResult.
+     *      Also, calls the dateOfCalculation method and displays the returned
+     *      value in lblFutureValueDate.
+     */
     private void calculateResults() {
 
         if(!tfMonthlyPayment.getText().isEmpty() && !tfInterestRate.getText().isEmpty() && !cbYears.getSelectionModel().isEmpty()) {
@@ -146,6 +160,10 @@ public class BectholdEnhancedFutureValueApp extends Application {
     } // End calculateResults
 
 
+    /**
+     * String method dateOfCalculation
+     * @return Current date in specified String format
+     */
     private String dateOfCalculation() {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
