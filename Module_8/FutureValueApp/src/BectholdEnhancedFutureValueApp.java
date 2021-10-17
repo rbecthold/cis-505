@@ -7,9 +7,13 @@
 
     Oracle. (2015). Class Application. https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html#start-javafx.stage.Stage-
 
+    Redko, A. (2013, September). Using JavaFX UI Controls: 14 Combo Box. https://docs.oracle.com/javafx/2/ui_controls/combo-box.htm
+
     Watch Cool IT Help. (2020). How to setup JavaFx Environment in Visual Studio code? [Video]. Youtube. https://youtu.be/H67COH9F718
 */
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -54,6 +58,7 @@ public class BectholdEnhancedFutureValueApp extends Application {
     private Button btnCalculate;
     private ComboBox<Integer> cbYears;
     
+
     /**
      * Overriding javafx.application.Application start() method:
      *      Called automatically on the JavaFX Application Thread,
@@ -70,7 +75,9 @@ public class BectholdEnhancedFutureValueApp extends Application {
         tfInterestRate = new TextField();
         taResult = new TextArea();
         btnClear = new Button("Clear");
+        btnClear.setOnAction(e -> clearFormFields());
         btnCalculate = new Button("Calculate");
+        btnCalculate.setOnAction(e -> calculateResults());
         lblMonthlyPayment = new Label("Monthly Payment:");
         lblInterestRate = new Label("Interest Rate:");
         lblInterestRateFormat = new Label("Enter 11.1% as 11.1");
@@ -79,6 +86,7 @@ public class BectholdEnhancedFutureValueApp extends Application {
         lblYears = new Label("Years:");
         lblFutureValueDate = new Label();
         cbYears = new ComboBox<Integer>();
+        cbYears.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
         cbYears.setPrefWidth(165); // Needed to make the Years ComboBox show as the correct width alongside the two TextFields
 
         // Create new GridPane object and set specified measurements
@@ -104,7 +112,7 @@ public class BectholdEnhancedFutureValueApp extends Application {
         pane.add(lblYears, 0, 3);
         pane.add(cbYears, 1, 3);
         pane.add(btnContainer, 1, 4);
-        pane.add(lblFutureValueDate, 0, 5);
+        pane.add(lblFutureValueDate, 0, 5, 2, 1);
         pane.add(taResult, 0, 6, 2, 1);
 
         // Define the size of the Scene object created from the GridPane and draw the window onscreen
@@ -113,9 +121,43 @@ public class BectholdEnhancedFutureValueApp extends Application {
 
     } // End start
 
-    public static void main(String[] args) {
+
+    private void clearFormFields() {
         
+            tfMonthlyPayment.setText("");
+            tfInterestRate.setText("");
+            taResult.setText("");
+            lblFutureValueDate.setText("");
+            cbYears.setValue(0);
+
+    } // End clearFormFields
+
+
+    private void calculateResults() {
+
+        if(!tfMonthlyPayment.getText().isEmpty() && !tfInterestRate.getText().isEmpty() && !cbYears.getSelectionModel().isEmpty()) {
+
+            double futureValue = FinanceCalculator.calculateFutureValue(Double.valueOf(tfMonthlyPayment.getText()), Double.valueOf(tfInterestRate.getText()), cbYears.getValue());
+            taResult.setText(String.format("The future value is $%,.2f", futureValue));
+            lblFutureValueDate.setText("Calculation as of " + dateOfCalculation());
+
+        }
+
+    } // End calculateResults
+
+
+    private String dateOfCalculation() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        return dateFormat.format(new Date());
+
+    } // End dateOfCalculation
+
+
+    public static void main(String[] args) {
+
         launch(BectholdEnhancedFutureValueApp.class, args);
+
     } // End main
 
 } // End BectholdEnhancedFutureValueApp class
