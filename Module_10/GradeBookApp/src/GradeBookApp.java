@@ -134,7 +134,7 @@ public class GradeBookApp extends Application {
     private void viewSavedEntries() throws Exception {
         // Read csv file contents into List<List<String>> records
         List<List<String>> students = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader("data/grades.csv"));
+        BufferedReader br = new BufferedReader(new FileReader("src/data/grades.csv"));
         String line;
 
         while((line = br.readLine()) != null) {
