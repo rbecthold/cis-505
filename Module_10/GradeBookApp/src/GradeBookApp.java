@@ -11,8 +11,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
