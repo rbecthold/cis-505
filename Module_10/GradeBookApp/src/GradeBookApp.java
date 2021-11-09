@@ -11,8 +11,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +33,9 @@ public class GradeBookApp extends Application {
      *      lblCourse .....-> Label for the tfCourse TextField
      *      lblGrade ......-> Label for the tfGrade TextField
      *      btnClear ......-> Button to clear all fields
-     *      btnSave .......-> Button to save new Grade Book entry
-     *      btnView .......-> Button to view saved Grade Book entries
+     *      btnSave .......-> Button to save new grade book entry
+     *      btnView .......-> Button to view saved grade book entries
+     *      tableView .....-> TableView for displaying saved entries
      */
     private TextField tfFirstName, tfLastName, tfCourse;
     private ComboBox<String> cbGrade;
@@ -63,13 +67,19 @@ public class GradeBookApp extends Application {
         btnClear.setOnAction(e -> clearFormFields());
         btnSave = new Button("Save");
         btnSave.setStyle("-fx-background-color: #DAF7A6;");
+        btnSave.setOnAction(e -> {
+                try {
+                    saveNewEntry();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            });
         btnView = new Button("View Saved Entries");
         btnView.setStyle("-fx-background-color: #D6EAF8;");
         btnView.setOnAction(e -> {
                 try {
                     viewSavedEntries();
                 } catch (Exception e1) {
-                    // TODO: Auto-generated catch block
                     e1.printStackTrace();
                 }
             });
@@ -94,9 +104,13 @@ public class GradeBookApp extends Application {
         // Create new TableView to organize output
         tableView = new TableView<>();
         TableColumn<Student, String> colFirstName = new TableColumn<>("First Name");
+        colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         TableColumn<Student, String> colLastName = new TableColumn<>("Last Name");
+        colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         TableColumn<Student, String> colCourse = new TableColumn<>("Course");
+        colCourse.setCellValueFactory(new PropertyValueFactory<>("course"));
         TableColumn<Student, String> colGrade = new TableColumn<>("Grade");
+        colGrade.setCellValueFactory(new PropertyValueFactory<>("grade"));
         tableView.getColumns().add(colFirstName);
         tableView.getColumns().add(colLastName);
         tableView.getColumns().add(colCourse);
@@ -129,9 +143,33 @@ public class GradeBookApp extends Application {
         tfLastName.setText("");
         tfCourse.setText("");
         cbGrade.setValue("");
+        tableView.getItems().clear();
     }
 
+    /**
+     * void method saveNewEntry:
+     *      If form fields are filled correctly,
+     *      saves new Student grade information to grades.csv
+     * @throws Exception
+     */
+    private void saveNewEntry() throws Exception {
+        if(!tfFirstName.getText().isBlank() && !tfLastName.getText().isBlank() && !tfCourse.getText().isBlank() && !cbGrade.getValue().isBlank()) {
+            BufferedWriter br = new BufferedWriter(new FileWriter("src/data/grades.csv", true));
+            br.write(String.format("\n%s,%s,%s,%s", tfFirstName.getText(), tfLastName.getText(), tfCourse.getText(), cbGrade.getValue()));
+            br.close();
+        }
+    }
+
+    /**
+     * void method viewSavedEntries:
+     *      Retrieves saved grade information from grades.csv
+     *      and displays in tableView
+     * @throws Exception
+     */
     private void viewSavedEntries() throws Exception {
+        // Clear out previous shown entries in case of new data that is not shown
+        tableView.getItems().clear();
+
         // Read csv file contents into List<List<String>> records
         List<List<String>> students = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader("src/data/grades.csv"));
@@ -141,13 +179,13 @@ public class GradeBookApp extends Application {
             String[] values = line.split(",");
             students.add(Arrays.asList(values));
         }
-
         br.close();
 
         // map 'records' contents to Student objects
         for(int i=1; i<students.size(); i++) {
             Student s = new Student(students.get(i).get(0), students.get(i).get(1), students.get(i).get(2), students.get(i).get(3));
             System.out.println(s.toString());
+            tableView.getItems().add(s);
             // TODO: Calling s.toString() here should add Students to tableView
         }
         
