@@ -128,9 +128,16 @@ public class GradeBookApp extends Application {
         gridPane.add(btnContainer, 0, 2, 4, 1);
         gridPane.add(tableView,    0, 3, 4, 1);
 
+        // Add GridPane to Scene and show on screen
         Scene scene = new Scene(gridPane, 600, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
+        try {
+            viewSavedEntries();
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
     } // end start
 
     /**
@@ -143,7 +150,12 @@ public class GradeBookApp extends Application {
         tfLastName.setText("");
         tfCourse.setText("");
         cbGrade.setValue("");
-        tableView.getItems().clear();
+        try {
+            viewSavedEntries();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -153,11 +165,12 @@ public class GradeBookApp extends Application {
      * @throws Exception
      */
     private void saveNewEntry() throws Exception {
-        if(!tfFirstName.getText().isBlank() && !tfLastName.getText().isBlank() && !tfCourse.getText().isBlank() && !cbGrade.getValue().isBlank()) {
+        if(!tfFirstName.getText().isBlank() && !tfLastName.getText().isBlank() && !tfCourse.getText().isBlank() && cbGrade.getValue() != null) {
             BufferedWriter br = new BufferedWriter(new FileWriter("src/data/grades.csv", true));
             br.write(String.format("\n%s,%s,%s,%s", tfFirstName.getText(), tfLastName.getText(), tfCourse.getText(), cbGrade.getValue()));
             br.close();
         }
+        viewSavedEntries();
     }
 
     /**
@@ -184,7 +197,6 @@ public class GradeBookApp extends Application {
         // map 'records' contents to Student objects
         for(int i=1; i<students.size(); i++) {
             Student s = new Student(students.get(i).get(0), students.get(i).get(1), students.get(i).get(2), students.get(i).get(3));
-            System.out.println(s.toString());
             tableView.getItems().add(s);
             // TODO: Calling s.toString() here should add Students to tableView
         }
